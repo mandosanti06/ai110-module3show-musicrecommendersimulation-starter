@@ -9,7 +9,7 @@ Example: **VibeFinder 1.0**
 
 ## 2. Intended Use  
 
-Describe what your recommender is designed to do and who it is for. 
+Describe what your recommender is designed to do and who it is for.
 
 Prompts:  
 
@@ -59,9 +59,9 @@ Prompts:
 
 ---
 
-## 6. Limitations and Bias 
+## 6. Limitations and Bias
 
-Where the system struggles or behaves unfairly. 
+Where the system struggles or behaves unfairly.
 
 Prompts:  
 
@@ -74,7 +74,7 @@ Prompts:
 
 ## 7. Evaluation  
 
-How you checked whether the recommender behaved as expected. 
+How you checked whether the recommender behaved as expected.
 
 Prompts:  
 
