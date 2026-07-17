@@ -8,10 +8,10 @@ An analysis of these platforms shows a shared business goal: maximizing user ret
 
 YouTube’s recommendation system operates within highly demanding engineering constraints, managing a corpus of billions of videos for a global user base. To process massive amounts of data in real time, the platform splits its recommendation task into a two-stage information retrieval funnel: candidate generation and ranking. This architecture balances candidate retrieval speed with downstream scoring precision.
 
-| Architectural Stage | Input Scale | Computational Focus | Key Modeling Methods | Primary Optimization Objective |
-| --- | --- | --- | --- | --- |
-| Candidate Generation (Retrieval) [cite: 5, 8] | Billions of videos | Sub-millisecond retrieval across the global corpus | Extreme multiclass classification; Continuous Bag-of-Words (CBOW) embeddings; Approximate Nearest Neighbor (ANN) search | High-recall selection of a few hundred relevant candidates |
-| Ranking (Scoring) [cite: 5, 8] | Hundreds of candidate videos | Deep evaluation of user-item feature interactions | Multi-gate Mixture-of-Experts (MMoE); Weighted Logistic Regression; Wide & Deep learning models | Expected watch time per impression; multi-objective engagement and satisfaction metrics |
+| Architectural Stage                           | Input Scale                  | Computational Focus                                | Key Modeling Methods                                                                                                    | Primary Optimization Objective                                                          |
+|-----------------------------------------------|------------------------------|----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| Candidate Generation (Retrieval) [cite: 5, 8] | Billions of videos           | Sub-millisecond retrieval across the global corpus | Extreme multiclass classification; Continuous Bag-of-Words (CBOW) embeddings; Approximate Nearest Neighbor (ANN) search | High-recall selection of a few hundred relevant candidates                              |
+| Ranking (Scoring) [cite: 5, 8]                | Hundreds of candidate videos | Deep evaluation of user-item feature interactions  | Multi-gate Mixture-of-Experts (MMoE); Weighted Logistic Regression; Wide & Deep learning models                         | Expected watch time per impression; multi-objective engagement and satisfaction metrics |
 
 ### Candidate Generation (Retrieval)
 
@@ -75,15 +75,15 @@ As these multi-task models grow larger and more complex, they become increasingl
 
 At the heart of any recommender system lies the choice between two foundational philosophies: Collaborative Filtering (CF) and Content-Based Filtering (CBF). Modern streaming platforms do not rely on either in isolation; rather, they deploy hybrid frameworks that exploit the complementary strengths of both approaches.
 
-| Dimension | Collaborative Filtering (CF) | Content-Based Filtering (CBF) |
-| --- | --- | --- |
-| Primary Data Source | User-item interaction logs (clicks, streams, skips, ratings). | Intrinsic item attributes (audio features, video tags, transcripts, lyrics). |
-| Mathematical Core | Matrix factorization, cosine similarity, latent factor projection. | Feature vector extraction, cosine similarity in attribute space, classification models. |
-| Cold-Start Viability | Severe failure: cannot recommend new items with zero interactions. | Excellent: can instantly represent and recommend newly uploaded tracks or videos. |
-| Vulnerability to Feedback Loops | High: tends to reinforce popular items, creating superstar effects and echo chambers. | Low: recommends based on niche acoustic or visual profiles, regardless of popularity. |
-| Platform Discovery Depth | Promotes serendipity by bridging unexpected genres through shared user behavior. | Restricted to similar-sounding or looking content; limits broad genre-hopping. |
-| Computation Complexity | High scaling complexity as users ($U$) and items ($I$) grow; requires matrix decomposition. | Linear with respect to the number of active items; easily parallelizable via vector search. |
-| Key Metrics Tracked | Playlist co-occurrences, repeat plays, skip rates. | Spectrograms, tempo, key, lyrics embeddings, visual tags. |
+| Dimension                       | Collaborative Filtering (CF)                                                                | Content-Based Filtering (CBF)                                                               |
+|---------------------------------|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| Primary Data Source             | User-item interaction logs (clicks, streams, skips, ratings).                               | Intrinsic item attributes (audio features, video tags, transcripts, lyrics).                |
+| Mathematical Core               | Matrix factorization, cosine similarity, latent factor projection.                          | Feature vector extraction, cosine similarity in attribute space, classification models.     |
+| Cold-Start Viability            | Severe failure: cannot recommend new items with zero interactions.                          | Excellent: can instantly represent and recommend newly uploaded tracks or videos.           |
+| Vulnerability to Feedback Loops | High: tends to reinforce popular items, creating superstar effects and echo chambers.       | Low: recommends based on niche acoustic or visual profiles, regardless of popularity.       |
+| Platform Discovery Depth        | Promotes serendipity by bridging unexpected genres through shared user behavior.            | Restricted to similar-sounding or looking content; limits broad genre-hopping.              |
+| Computation Complexity          | High scaling complexity as users ($U$) and items ($I$) grow; requires matrix decomposition. | Linear with respect to the number of active items; easily parallelizable via vector search. |
+| Key Metrics Tracked             | Playlist co-occurrences, repeat plays, skip rates.                                          | Spectrograms, tempo, key, lyrics embeddings, visual tags.                                   |
 
 ### Collaborative Filtering (CF)
 
@@ -148,12 +148,7 @@ To construct a robust personalization engine, modern platforms deploy hybrid arc
 
 The core of Spotify’s recommendation engine is a hybrid pipeline that combines collaborative filtering, raw audio signal analysis, and natural language processing to generate personalized playlists like Discover Weekly and Release Radar. This system represents a significant evolution from the platform's early years, when it relied primarily on collaborative filtering before acquiring machine learning and audio analysis expertise through The Echo Nest.
 
-| Feature Layer | Source Mechanism | Data Format | Mathematical / Model Framework | Operational Impact |
-| --- | --- | --- | --- | --- |
-| Acoustic Profiling [cite: 1, 2] | Raw audio file ingestion and digital signal processing | Spectrogram slices; acoustic vectors | Convolutional Neural Networks (CNNs); 42-dimensional feature embedding vectors | Bypasses item cold-start; maps structural transitions and timbral features |
-| Organizational CF [cite: 12, 27, 34] | User-created playlists and listening session co-occurrences | Playlist sequence logs | Continuous Bag-of-Words (CBOW) Word2Vec; Factored Item Similarity Model (FISM) | Maps contextual relationships and acoustic flow |
-| Cultural Semantic Extraction [cite: 3, 27] | Text scraping from music blogs, social media, and metadata | Raw web text; lyrics; artist bios | Large Language Models (LLMs); TF-IDF / Adjective Vector embeddings | Captures genre trends, cultural context, and emotional nuance |
-| Real-Time Context Logging [cite: 28] | Live sensor and app environment polling | Geolocation, local weather, time-stamps | Dynamic Context-Aware Filtering | Adjusts recommendations to suit the time of day, location, and environment |
+ 
 
 ### Sourced Metadata and Acoustic Profiling (CBF)
 
