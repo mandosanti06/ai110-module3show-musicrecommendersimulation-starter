@@ -17,17 +17,32 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Real-world recommenders learn what you like from huge amounts of user
+activity and content signals, then predict what you are most likely to enjoy
+next. My version keeps that same idea but stays small and transparent: instead
+of learning from crowds of users, it compares each song's own attributes
+directly against a single user's stated taste. A **Scoring Rule** rates how
+closely one song matches the user's preferences, and a **Ranking Rule** scores
+every song and returns the best few. My priority is a match that is
+correct, explainable, and easy to tune, so I can see exactly why each song was
+recommended.
 
-Some prompts to answer:
+**Features my `Song` uses:**
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+- `genre` (categorical)
+- `mood` (categorical)
+- `energy` (numeric)
+- `tempo_bpm` (numeric)
+- `valence` (numeric)
+- `danceability` (numeric)
+- `acousticness` (numeric)
 
-You can include a simple diagram or bullet list if helpful.
+**Information my `UserProfile` stores:**
+
+- `favorite_genre`
+- `favorite_mood`
+- `target_energy`
+- `likes_acoustic`
 
 ---
 
