@@ -44,6 +44,74 @@ recommended.
 - `target_energy`
 - `likes_acoustic`
 
+### Data Flow
+
+The user's preferences enter once, the catalog is loaded once, and then **every
+song is judged one at a time** before anything is ranked. Scoring is per-song and
+independent (a song just earns its own points); ranking is global and happens
+once, at the end.
+
+```mermaid
+flowchart TD
+    A["INPUT · User Prefs<br/>genre · mood · target_energy · likes_acoustic"] --> B["load_songs('data/songs.csv')<br/>→ list of song dicts"]
+    B --> C{"More songs<br/>to judge?"}
+    C -- "Yes: next song" --> D["score_song(user_prefs, song)<br/>→ (score, reasons)"]
+    D --> L["append (song, score, explanation)<br/>to results"]
+    L --> C
+    C -- "No: all judged" --> M["sort by score, highest first<br/>tie-break: danceability, then id"]
+    M --> N["OUTPUT · Top-K Recommendations<br/>(song, score, explanation)"]
+```
+
+This maps 1:1 onto the three functions in `src/recommender.py`: `load_songs`
+(input), `score_song` (the loop body), and `recommend_songs`
+(collect → sort → return top-k).
+
+### Algorithm Recipe — "VibeMatch"
+
+Every song starts at **0 points**, earns points for each way it matches the
+user's taste, and the highest scores win. Each rule that fires also appends a
+plain-English reason, so every score arrives with its receipt.
+
+| Rule | Condition | Points |
+| ---- | --------- | ------ |
+| **Genre match** | `song.genre == favorite_genre` | **+3.0** |
+| **Mood match** | `song.mood == favorite_mood` | **+2.0** |
+| **Energy fit** | closeness to `target_energy` | **+2.0 × (1 − \|energy − target_energy\|)** |
+| **Acoustic fit** | `likes_acoustic` and `acousticness ≥ 0.6`, **or** not `likes_acoustic` and `acousticness ≤ 0.3` | **+1.0** |
+| **Danceability bonus** | `danceability ≥ 0.7` | **+0.5** |
+
+**Total = genre + mood + energy + acoustic + dance** (max ≈ 8.5).
+
+Design choices behind the weights:
+
+- **Genre is king (3.0).** The strongest single signal of taste, so a genre miss
+  can't be fully rescued by other matches.
+- **Mood (2.0) and energy (2.0) are co-equal seconds.** Energy is *graded, not
+  binary* — a 0.75-energy song against a 0.80 target still earns `2.0 × 0.95 =
+  1.9`, while a 0.2-energy song earns almost nothing. This keeps the ranking
+  meaningful instead of clumping songs at the same score.
+- **Acoustic (1.0) and danceability (0.5) are tie-breakers** that nudge between
+  otherwise-similar songs rather than driving the ranking.
+
+**Ranking rule:** score every song → sort highest-first → break ties on higher
+`danceability`, then lower `id` (deterministic) → return the top `k` (default 5).
+
+### Potential Biases I Expect
+
+- **Genre over-prioritization.** Because genre is weighted highest (3.0), the
+  system may bury a song that perfectly matches the user's *mood and energy* just
+  because its genre label differs — ignoring great cross-genre matches (e.g. a
+  chill jazz track for a user who typed "lofi").
+- **Popularity of common labels.** Genres and moods that appear often in the tiny
+  catalog have more chances to match; rare genres (classical, reggae, funk) can
+  almost never win, so the same handful of songs surface repeatedly.
+- **Rigid categorical matching.** Exact-string genre/mood checks mean near-synonyms
+  ("indie pop" vs "pop", "chill" vs "relaxed") score zero, penalizing users whose
+  taste doesn't use the catalog's exact vocabulary.
+- **Feature blind spots.** The score ignores `tempo_bpm` and `valence` entirely, so
+  two songs that feel very different (fast vs slow, happy vs sad) can tie — the
+  system can't "hear" dimensions it doesn't weigh.
+
 ---
 
 ## Getting Started
