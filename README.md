@@ -151,15 +151,49 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
+Running `python -m src.main` with the default `genre=pop, mood=happy,
+energy=0.8` profile produces:
 
-```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+```text
+Loaded songs: 20
+
+Top 5 recommendations for genre=pop, mood=happy, energy=0.8
+
+============================================================
+1. Sunrise City — Neon Echo
+   Score: 7.46
+   Reasons:
+     • genre match: pop (+3.0)
+     • mood match: happy (+2.0)
+     • energy fit: 0.82 vs target 0.8 (+1.96)
+     • danceable: 0.79 (+0.5)
+============================================================
+2. Gym Hero — Max Pulse
+   Score: 5.24
+   Reasons:
+     • genre match: pop (+3.0)
+     • energy fit: 0.93 vs target 0.8 (+1.74)
+     • danceable: 0.88 (+0.5)
+============================================================
+3. Rooftop Lights — Indigo Parade
+   Score: 4.42
+   Reasons:
+     • mood match: happy (+2.0)
+     • energy fit: 0.76 vs target 0.8 (+1.92)
+     • danceable: 0.82 (+0.5)
+============================================================
+4. Superstition — Stevie Wonder
+   Score: 2.46
+   Reasons:
+     • energy fit: 0.78 vs target 0.8 (+1.96)
+     • danceable: 0.8 (+0.5)
+============================================================
+5. One More Time — Daft Punk
+   Score: 2.40
+   Reasons:
+     • energy fit: 0.85 vs target 0.8 (+1.90)
+     • danceable: 0.82 (+0.5)
+============================================================
 ```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
